@@ -1,0 +1,79 @@
+/* 네비게이션 스타일 */
+.navbar {
+  z-index: 1030;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-right: 120px !important;
+}
+
+/* 네비게이션 바 로고 강제 스타일 */
+.navbar .navbar-brand {
+  margin-right: 120px !important;
+}
+
+.navbar .container-fluid .navbar-brand {
+  margin-right: 120px !important;
+}
+
+/* 네비게이션 레이아웃 조정 */
+.navbar .d-flex.align-items-center {
+  flex: 1;
+}
+
+.navbar .navbar-nav.me-auto {
+  margin-right: auto !important;
+}
+
+.navbar .navbar-brand.ms-auto {
+  margin-left: auto !important;
+}
+
+/* 네비게이션 반응형 수정 */
+@media (max-width: 991.98px) {
+  .navbar-nav {
+    margin-bottom: 1rem;
+  }
+
+  .navbar-nav .nav-link {
+    padding: 0.5rem 0;
+  }
+
+  .dropdown-menu {
+    border: none;
+    box-shadow: none;
+    padding-left: 1rem;
+  }
+
+  /* 네비게이션 버튼 세로 배치 */
+  .navbar .d-flex.flex-column.flex-lg-row {
+    flex-direction: column !important;
+    gap: 0.5rem;
+  }
+
+  .navbar .d-flex.flex-column.flex-lg-row .btn {
+    width: 100%;
+    margin: 0;
+  }
+
+  /* 모바일에서 로고 중앙 정렬 */
+  .navbar-brand.ms-auto {
+    margin-left: 0 !important;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  /* 데스크톱에서는 가로 배치 */
+  .navbar .d-flex.flex-column.flex-lg-row {
+    flex-direction: row !important;
+    gap: 0.5rem;
+  }
+
+  .navbar .d-flex.flex-column.flex-lg-row .btn {
+    width: auto;
+  }
+}

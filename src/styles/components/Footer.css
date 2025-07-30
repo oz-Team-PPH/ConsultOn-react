@@ -1,0 +1,12 @@
+/* 푸터 스타일 */
+footer {
+  width: 100vw !important;
+  position: relative !important;
+  left: 50% !important;
+  right: 50% !important;
+  margin-left: -50vw !important;
+  margin-right: -50vw !important;
+  background-color: #212529 !important;
+  color: #ffffff !important;
+  padding: 1rem 0 !important;
+}
