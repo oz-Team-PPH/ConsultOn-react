@@ -1,8 +1,10 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import FeatureCard from "./FeatureCard";
 
 const FeaturesSection = () => {
   const featureCardsRef = useRef([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observerOptions = {
@@ -45,8 +47,34 @@ const FeaturesSection = () => {
     };
   }, []);
 
+  const handleFeatureClick = (featureId) => {
+    switch (featureId) {
+      case 'ai-qa':
+        navigate('/ai-qa');
+        break;
+      case 'expert-search':
+        navigate('/expert-search');
+        break;
+      case 'video-consultation':
+        navigate('/video-consultation');
+        break;
+      case 'recording-summary':
+        navigate('/recording-summary');
+        break;
+      case 'todo-notification':
+        navigate('/todo-notification');
+        break;
+      case 'expert-dashboard':
+        navigate('/expert-dashboard');
+        break;
+      default:
+        break;
+    }
+  };
+
   const features = [
     {
+      id: 'ai-qa',
       icon: (
         <svg
           width="24"
@@ -70,6 +98,7 @@ const FeaturesSection = () => {
       gradientClass: "gradient-1",
     },
     {
+      id: 'expert-search',
       icon: (
         <svg
           width="24"
@@ -93,6 +122,7 @@ const FeaturesSection = () => {
       gradientClass: "gradient-2",
     },
     {
+      id: 'video-consultation',
       icon: (
         <svg
           width="24"
@@ -123,6 +153,7 @@ const FeaturesSection = () => {
       gradientClass: "gradient-3",
     },
     {
+      id: 'recording-summary',
       icon: (
         <svg
           width="24"
@@ -146,6 +177,7 @@ const FeaturesSection = () => {
       gradientClass: "gradient-4",
     },
     {
+      id: 'todo-notification',
       icon: (
         <svg
           width="24"
@@ -169,6 +201,7 @@ const FeaturesSection = () => {
       gradientClass: "gradient-5",
     },
     {
+      id: 'expert-dashboard',
       icon: (
         <svg
           width="24"
@@ -197,21 +230,25 @@ const FeaturesSection = () => {
     <section
       className="features-section w-100"
       style={{
-        backgroundColor: "#ffffff",
+        backgroundColor: "#f8f9fa",
+        marginBottom: "4rem"
       }}
     >
       <div className="container">
-        <h2 className="main-title">강력한 AI기반 상담 도구</h2>
-        <p className="main-subtitle">
-          복잡한 과정없이 전문적인 상담을 받을 수 있습니다
-        </p>
+        <div className="text-center" style={{ marginTop: "3rem" }}>
+          <h2 className="main-title" style={{ fontSize: "2.5rem" }}>강력한 AI기반 상담 도구</h2>
+          <p className="main-subtitle" style={{ fontSize: "1.25rem", marginBottom: "3rem" }}>
+            복잡한 과정없이 전문적인 상담을 받을 수 있습니다
+          </p>
+        </div>
 
         <div className="features-grid">
           {features.map((feature, index) => (
             <div
               key={index}
               ref={(el) => (featureCardsRef.current[index] = el)}
-              className="feature-card"
+              className="feature-card cursor-pointer"
+              onClick={() => handleFeatureClick(feature.id)}
             >
               <div className={`feature-icon ${feature.gradientClass}`}>
                 {feature.icon}

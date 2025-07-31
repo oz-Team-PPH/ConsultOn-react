@@ -1,6 +1,7 @@
 import Hero from "../components/Hero";
-import HowToVideo from "../components/HowToVideo";
+import PopularExperts from "../components/PopularExperts";
 import FeaturesSection from "../components/FeaturesSection";
+import LifeTipsSection from "../components/LifeTipsSection";
 import PricingSection from "../components/PricingSection";
 import CTASection from "../components/CTASection";
 import Footer from "../components/Footer";
@@ -9,8 +10,9 @@ const Home = () => {
   return (
     <main className="home-page">
       <Hero />
-      <HowToVideo />
+      <PopularExperts />
       <FeaturesSection />
+      <LifeTipsSection />
       <PricingSection />
       <CTASection />
       <Footer />

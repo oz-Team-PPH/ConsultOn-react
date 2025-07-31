@@ -1,12 +1,72 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const Hero = () => {
   const [inputValue, setInputValue] = useState("");
+  const [counts, setCounts] = useState({
+    users: 0,
+    time: 0,
+    experts: 0
+  });
+  const statsRef = useRef(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // AI 사전응답 로직 구현
     console.log("AI 사전응답 요청:", inputValue);
+  };
+
+  // 숫자 애니메이션 로직
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasAnimated) {
+            setHasAnimated(true);
+            animateCounts();
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    if (statsRef.current) {
+      observer.observe(statsRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasAnimated]);
+
+  const animateCounts = () => {
+    const targets = {
+      users: 4300,
+      time: 15,
+      experts: 300
+    };
+
+    const duration = 2000; // 2초
+    const steps = 60;
+    const stepDuration = duration / steps;
+
+    let currentStep = 0;
+
+    const interval = setInterval(() => {
+      currentStep++;
+      
+      const progress = currentStep / steps;
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4); // 이징 함수
+
+      setCounts({
+        users: Math.floor(targets.users * easeOutQuart),
+        time: Math.floor(targets.time * easeOutQuart),
+        experts: Math.floor(targets.experts * easeOutQuart)
+      });
+
+      if (currentStep >= steps) {
+        clearInterval(interval);
+        setCounts(targets); // 최종 값으로 설정
+      }
+    }, stepDuration);
   };
 
   return (
@@ -48,7 +108,7 @@ const Hero = () => {
           <h1 className="display-4 fw-bold">
             <span className="gradient-text">AI와 함께</span>
             <br />
-            <span className="subtext">전문가와 상담하세요</span>
+            <span className="subtext">나에게 맞는 전문가를 찾아보세요</span>
           </h1>
         </div>
 
@@ -121,17 +181,17 @@ const Hero = () => {
         </div>
 
         {/* 통계 섹션 */}
-        <div className="row text-center mt-5 pt-4">
+        <div className="row text-center mt-5 pt-4" ref={statsRef}>
           <div className="col-4 col-md-4 mb-3">
-            <h2 className="display-6 fw-bold">4300+</h2>
+            <h2 className="display-6 fw-bold">{counts.users.toLocaleString()}+</h2>
             <p className="text-muted small">이용자 수</p>
           </div>
           <div className="col-4 col-md-4 mb-3">
-            <h2 className="display-6 fw-bold">15분</h2>
-            <p className="text-muted small">평균 매칭시간</p>
+            <h2 className="display-6 fw-bold">{counts.time}분</h2>
+            <p className="text-muted small">평균 상담시간</p>
           </div>
           <div className="col-4 col-md-4 mb-3">
-            <h2 className="display-6 fw-bold">300+</h2>
+            <h2 className="display-6 fw-bold">{counts.experts.toLocaleString()}+</h2>
             <p className="text-muted small">등록된 전문가 수</p>
           </div>
         </div>

@@ -50,12 +50,14 @@ const PricingSection = () => {
   };
 
   return (
-    <section className="pricing-section">
+    <section className="pricing-section" style={{ backgroundColor: "#f8f9fa", marginBottom: "4rem" }}>
       <div className="container">
-        <h2 className="pricing-title">합리적인 가격으로 시작하세요</h2>
-        <p className="pricing-subtitle">
-          무료로 시작하고 필요에 따라 업그레이드하세요
-        </p>
+        <div className="text-center" style={{ marginTop: "3rem" }}>
+          <h2 className="pricing-title" style={{ fontSize: "2.5rem" }}>합리적인 가격으로 시작하세요</h2>
+          <p className="pricing-subtitle" style={{ fontSize: "1.25rem", marginBottom: "3rem" }}>
+            무료로 시작하고 필요에 따라 업그레이드하세요
+          </p>
+        </div>
 
         <div className="plans">
           {plans.map((plan, index) => (

@@ -9,11 +9,11 @@ const CTASection = () => {
     <section
       className="cta-section w-100"
       style={{
-        background: "linear-gradient(135deg, #7c3aed, #5d5fff)",
+        backgroundColor: "#f8f9fa",
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)",
         padding: "4rem 0",
-        color: "white",
+        color: "#212529",
       }}
     >
       <div className="container text-center">
@@ -22,13 +22,14 @@ const CTASection = () => {
         </h2>
         <p className="lead mb-4">간단히 AI와 대화나누고 고민을 해결해보세요</p>
         <button
-          className="btn btn-light btn-lg px-4 py-2 fw-bold"
+          className="btn btn-custom btn-lg px-4 py-2 fw-bold"
           onClick={handleStartFree}
           style={{
             fontSize: "1.1rem",
             borderRadius: "50px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            boxShadow: "0 4px 12px rgba(124, 58, 237, 0.3)",
             transition: "all 0.3s ease",
+            color: "white",
           }}
           onMouseOver={(e) => {
             e.target.style.transform = "translateY(-2px)";
