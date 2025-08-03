@@ -107,9 +107,9 @@ export default function ConsultationBooking() {
   };
 
   return (
-    <div className="container-fluid p-4">
+    <div className="container p-4">
       <div className="row justify-content-center">
-        <div className="col-12 col-lg-10 col-xl-8">
+        <div className="col-12 col-lg-8">
           <div className="card shadow-lg">
             <div className="card-header">
               <h2 className="h3 mb-0">상담 예약</h2>
@@ -118,42 +118,34 @@ export default function ConsultationBooking() {
               <form onSubmit={handleSubmit}>
                 {/* 전문가 선택 */}
                 <div className="mb-4">
-                  <label className="form-label">전문가 선택</label>
+                  <label className="form-label fw-bold">전문가 선택</label>
                   <div className="row g-3">
                     {experts.map((expert) => (
-                      <div key={expert.id} className="col-12 col-md-6 col-lg-4">
+                      <div key={expert.id} className="col-12 col-md-6">
                         <div
-                          className={`card h-100 ${
+                          className={`card h-100 cursor-pointer ${
                             selectedExpert?.id === expert.id
                               ? "border-primary"
                               : ""
                           }`}
+                          onClick={() => setSelectedExpert(expert)}
                         >
-                          <div className="card-body text-center">
-                            <h6 className="card-title">{expert.name}</h6>
-                            <p className="card-text small">
+                          <div className="card-body">
+                            <h5 className="card-title">{expert.name}</h5>
+                            <p className="card-text text-muted">
                               {expert.specialty}
                             </p>
-                            <p className="card-text small">
-                              <span className="text-warning">★</span>{" "}
-                              {expert.rating} ({expert.experience})
-                            </p>
-                            <p className="card-text small">
-                              ₩{expert.rate.toLocaleString()}/분
-                            </p>
-                            <button
-                              type="button"
-                              className={`btn btn-sm ${
-                                selectedExpert?.id === expert.id
-                                  ? "btn-primary"
-                                  : "btn-outline-primary"
-                              }`}
-                              onClick={() => setSelectedExpert(expert)}
-                            >
-                              {selectedExpert?.id === expert.id
-                                ? "선택됨"
-                                : "선택"}
-                            </button>
+                            <div className="d-flex justify-content-between align-items-center">
+                              <span className="text-primary fw-bold">
+                                ₩{expert.rate.toLocaleString()}/시간
+                              </span>
+                              <span className="badge bg-success">
+                                ⭐ {expert.rating}
+                              </span>
+                            </div>
+                            <small className="text-muted">
+                              경력: {expert.experience}
+                            </small>
                           </div>
                         </div>
                       </div>
@@ -161,9 +153,52 @@ export default function ConsultationBooking() {
                   </div>
                 </div>
 
+                {/* 상담 유형 */}
+                <div className="mb-4">
+                  <label className="form-label fw-bold">상담 유형</label>
+                  <div className="row g-3">
+                    <div className="col-6">
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="consultationType"
+                          id="video"
+                          value="video"
+                          checked={consultationType === "video"}
+                          onChange={(e) =>
+                            setConsultationType(e.target.value)
+                          }
+                        />
+                        <label className="form-check-label" htmlFor="video">
+                          화상 상담
+                        </label>
+                      </div>
+                    </div>
+                    <div className="col-6">
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="consultationType"
+                          id="chat"
+                          value="chat"
+                          checked={consultationType === "chat"}
+                          onChange={(e) =>
+                            setConsultationType(e.target.value)
+                          }
+                        />
+                        <label className="form-check-label" htmlFor="chat">
+                          채팅 상담
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* 날짜 선택 */}
-                <div className="mb-3">
-                  <label htmlFor="date" className="form-label">
+                <div className="mb-4">
+                  <label htmlFor="date" className="form-label fw-bold">
                     날짜 선택
                   </label>
                   <input
@@ -179,14 +214,14 @@ export default function ConsultationBooking() {
 
                 {/* 시간 선택 */}
                 {selectedDate && (
-                  <div className="mb-3">
-                    <label className="form-label">시간 선택</label>
+                  <div className="mb-4">
+                    <label className="form-label fw-bold">시간 선택</label>
                     <div className="row g-2">
                       {availableSlots.map((slot) => (
-                        <div key={slot} className="col-6 col-md-4 col-lg-2">
+                        <div key={slot} className="col-6 col-md-3">
                           <button
                             type="button"
-                            className={`btn btn-sm w-100 ${
+                            className={`btn w-100 ${
                               selectedTime === slot
                                 ? "btn-primary"
                                 : "btn-outline-primary"
@@ -201,80 +236,47 @@ export default function ConsultationBooking() {
                   </div>
                 )}
 
-                {/* 상담 유형 */}
-                <div className="mb-3">
-                  <label className="form-label">상담 유형</label>
-                  <div className="row g-3">
-                    <div className="col-12 col-md-6">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="consultationType"
-                          id="video"
-                          value="video"
-                          checked={consultationType === "video"}
-                          onChange={(e) => setConsultationType(e.target.value)}
-                        />
-                        <label className="form-check-label" htmlFor="video">
-                          화상 상담
-                        </label>
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-6">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="consultationType"
-                          id="chat"
-                          value="chat"
-                          checked={consultationType === "chat"}
-                          onChange={(e) => setConsultationType(e.target.value)}
-                        />
-                        <label className="form-check-label" htmlFor="chat">
-                          채팅 상담
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 상담 내용 */}
+                {/* 메모 */}
                 <div className="mb-4">
-                  <label htmlFor="notes" className="form-label">
+                  <label htmlFor="notes" className="form-label fw-bold">
                     상담 내용 (선택사항)
                   </label>
                   <textarea
-                    className="form-control form-control-lg"
+                    className="form-control"
                     id="notes"
-                    rows="3"
+                    rows="4"
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    placeholder="상담하고 싶은 내용을 간단히 작성해주세요."
+                    placeholder="상담하고 싶은 내용을 간단히 적어주세요."
                   />
                 </div>
 
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-lg w-100 py-3"
-                  disabled={
-                    loading || !selectedExpert || !selectedDate || !selectedTime
-                  }
-                >
-                  {loading ? (
-                    <>
-                      <span
-                        className="spinner-border spinner-border-sm me-2"
-                        role="status"
-                        aria-hidden="true"
-                      ></span>
-                      예약 중...
-                    </>
-                  ) : (
-                    "상담 예약하기"
-                  )}
-                </button>
+                {/* 예약 버튼 */}
+                <div className="d-grid">
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-lg"
+                    disabled={
+                      loading ||
+                      !selectedExpert ||
+                      !selectedDate ||
+                      !selectedTime
+                    }
+                  >
+                    {loading ? (
+                      <>
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
+                        예약 중...
+                      </>
+                    ) : (
+                      "상담 예약하기"
+                    )}
+                  </button>
+                </div>
               </form>
             </div>
           </div>

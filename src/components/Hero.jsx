@@ -72,7 +72,7 @@ const Hero = () => {
   return (
     <section
       id="hero"
-      className="text-center bg-light w-100"
+      className="text-center bg-light"
       style={{
         minHeight: "100vh",
         paddingTop: "76px", // 네비게이션 바 높이만큼 상단 여백

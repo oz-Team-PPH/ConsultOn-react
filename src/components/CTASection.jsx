@@ -7,11 +7,9 @@ const CTASection = () => {
 
   return (
     <section
-      className="cta-section w-100"
+      className="cta-section"
       style={{
         backgroundColor: "#f8f9fa",
-        width: "100vw",
-        marginLeft: "calc(-50vw + 50%)",
         padding: "4rem 0",
         color: "#212529",
       }}

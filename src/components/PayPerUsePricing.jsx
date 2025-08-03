@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PricingSection = () => {
+const PayPerUsePricing = () => {
   const pricingTiers = [
     {
       name: 'Standard',
@@ -96,4 +96,4 @@ const PricingSection = () => {
   );
 };
 
-export default PricingSection;
+export default PayPerUsePricing; 

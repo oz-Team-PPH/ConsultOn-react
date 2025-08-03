@@ -87,7 +87,7 @@ export default function ExpertMatching() {
 
   if (loading) {
     return (
-      <div className="container-fluid p-4">
+      <div className="container p-4">
         <div className="text-center">
           <div className="spinner-border" role="status">
             <span className="visually-hidden">로딩 중...</span>
@@ -99,7 +99,7 @@ export default function ExpertMatching() {
   }
 
   return (
-    <div className="container-fluid p-4">
+    <div className="container p-4">
       <div className="row">
         <div className="col-12">
           <h1 className="h2 mb-4">전문가 매칭</h1>
@@ -108,59 +108,87 @@ export default function ExpertMatching() {
 
       {/* 검색 및 필터 */}
       <div className="row mb-4">
-        <div className="col-12 col-md-6 mb-3 mb-md-0">
-          <input
-            type="text"
-            className="form-control form-control-lg"
-            placeholder="전문가 이름 또는 분야로 검색..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <div className="col-12 col-md-6">
-          <select
-            className="form-select form-select-lg"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            {categories.map((category) => (
-              <option key={category.value} value={category.value}>
-                {category.label}
-              </option>
-            ))}
-          </select>
+        <div className="col-12">
+          <div className="card">
+            <div className="card-body">
+              <div className="row g-3">
+                <div className="col-12 col-md-6">
+                  <label htmlFor="search" className="form-label">
+                    검색
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="search"
+                    placeholder="전문가 이름이나 전문분야로 검색"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+                <div className="col-12 col-md-6">
+                  <label htmlFor="category" className="form-label">
+                    카테고리
+                  </label>
+                  <select
+                    className="form-select"
+                    id="category"
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                  >
+                    {categories.map((category) => (
+                      <option key={category.value} value={category.value}>
+                        {category.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* 전문가 목록 */}
       <div className="row g-4">
         {filteredExperts.map((expert) => (
-          <div key={expert.id} className="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div className="card h-100 shadow-sm">
-              <div className="card-body text-center">
-                <img
-                  src={expert.image}
-                  alt={expert.name}
-                  className="rounded-circle mb-3"
-                  width="80"
-                  height="80"
-                />
-                <h5 className="card-title">{expert.name}</h5>
-                <p className="card-text text-muted">{expert.specialty}</p>
-                <p className="card-text small">{expert.description}</p>
-                <div className="mb-3">
-                  <span className="text-warning">★</span> {expert.rating} (
-                  {expert.experience})
+          <div key={expert.id} className="col-12 col-md-6 col-lg-4">
+            <div className="card h-100">
+              <div className="card-body">
+                <div className="d-flex align-items-center mb-3">
+                  <img
+                    src={expert.image}
+                    alt={expert.name}
+                    className="rounded-circle me-3"
+                    width="50"
+                    height="50"
+                  />
+                  <div>
+                    <h5 className="card-title mb-1">{expert.name}</h5>
+                    <p className="card-text text-muted mb-0">
+                      {expert.specialty}
+                    </p>
+                  </div>
                 </div>
-                <div className="mb-3">
-                  <strong>₩{expert.rate.toLocaleString()}/분</strong>
+                <p className="card-text">{expert.description}</p>
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <span className="text-primary fw-bold">
+                    ₩{expert.rate.toLocaleString()}/시간
+                  </span>
+                  <span className="badge bg-success">
+                    ⭐ {expert.rating}
+                  </span>
                 </div>
-                <Link
-                  to={`/booking?expert=${expert.id}`}
-                  className="btn btn-primary w-100"
-                >
-                  상담 예약
-                </Link>
+                <div className="d-flex justify-content-between align-items-center">
+                  <small className="text-muted">
+                    경력: {expert.experience}
+                  </small>
+                  <Link
+                    to={`/booking?expert=${expert.id}`}
+                    className="btn btn-primary btn-sm"
+                  >
+                    상담 예약
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
@@ -169,8 +197,7 @@ export default function ExpertMatching() {
 
       {filteredExperts.length === 0 && (
         <div className="text-center py-5">
-          <h5 className="text-muted">검색 결과가 없습니다.</h5>
-          <p className="text-muted">다른 검색어를 시도해보세요.</p>
+          <p className="text-muted">검색 조건에 맞는 전문가가 없습니다.</p>
         </div>
       )}
     </div>

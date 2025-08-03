@@ -12,7 +12,7 @@ export default function NotificationSettings() {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container p-4">
       <h2 className="h3 mb-4">알림 설정</h2>
 
       <div className="card mb-4">

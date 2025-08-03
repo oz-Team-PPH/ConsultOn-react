@@ -47,7 +47,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="container-fluid p-4">
+    <div className="container p-4">
       <div className="row justify-content-center">
         <div className="col-12 col-lg-8 col-xl-6">
           <div className="card shadow-lg">
@@ -105,6 +105,7 @@ export default function Profile() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
+                        required
                       />
                     </div>
                     <div className="col-12 col-md-6">
@@ -141,17 +142,23 @@ export default function Profile() {
                         className="form-control form-control-lg"
                         id="bio"
                         name="bio"
-                        rows="3"
+                        rows="4"
                         value={formData.bio}
                         onChange={handleChange}
                       />
                     </div>
                   </div>
-
-                  <div className="d-flex gap-2 mt-4">
+                  <div className="d-flex justify-content-end gap-2 mt-4">
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={handleCancel}
+                    >
+                      취소
+                    </button>
                     <button
                       type="submit"
-                      className="btn btn-primary btn-lg flex-fill"
+                      className="btn btn-primary"
                       disabled={loading}
                     >
                       {loading ? (
@@ -166,13 +173,6 @@ export default function Profile() {
                       ) : (
                         "저장"
                       )}
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary btn-lg"
-                      onClick={handleCancel}
-                    >
-                      취소
                     </button>
                   </div>
                 </form>
@@ -196,9 +196,7 @@ export default function Profile() {
                   </div>
                   <div className="col-12 col-md-6">
                     <label className="form-label fw-bold">직책</label>
-                    <p className="form-control-plaintext">
-                      {userData.position}
-                    </p>
+                    <p className="form-control-plaintext">{userData.position}</p>
                   </div>
                   <div className="col-12">
                     <label className="form-label fw-bold">자기소개</label>

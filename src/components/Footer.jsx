@@ -6,16 +6,8 @@ const Footer = () => {
     <footer
       id="about"
       className="bg-dark text-light py-3"
-      style={{
-        width: "100vw",
-        position: "relative",
-        left: "50%",
-        right: "50%",
-        marginLeft: "-50vw",
-        marginRight: "-50vw",
-      }}
     >
-      <div className="container-fluid">
+      <div className="container">
         <div className="row">
           <div className="col-md-4 mb-4 mb-md-0">
             <h5 className="fw-bold pt-3">Consul+On</h5>

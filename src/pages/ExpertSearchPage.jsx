@@ -10,6 +10,7 @@ export default function ExpertSearchPage() {
   const [selectedRating, setSelectedRating] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState('grid'); // grid or list
   const navigate = useNavigate();
 
   // 전문가 데이터 시뮬레이션
@@ -24,11 +25,12 @@ export default function ExpertSearchPage() {
         rating: 4.8,
         reviewCount: 127,
         price: '50,000원/시간',
-        image: 'https://via.placeholder.com/100x100/4F46E5/FFFFFF?text=김',
+        image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face',
         description: '임상심리학 박사, 다양한 심리 문제에 대한 전문적인 상담을 제공합니다.',
         available: true,
         languages: ['한국어', '영어'],
-        certifications: ['임상심리사', '상담심리사']
+        certifications: ['임상심리사', '상담심리사'],
+        tags: ['우울증', '불안', '스트레스']
       },
       {
         id: 2,
@@ -39,11 +41,12 @@ export default function ExpertSearchPage() {
         rating: 4.9,
         reviewCount: 89,
         price: '60,000원/시간',
-        image: 'https://via.placeholder.com/100x100/059669/FFFFFF?text=이',
+        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
         description: 'HR 전문가, 커리어 개발과 이직 준비에 대한 실질적인 조언을 제공합니다.',
         available: true,
         languages: ['한국어'],
-        certifications: ['HR 전문가', '커리어 코치']
+        certifications: ['HR 전문가', '커리어 코치'],
+        tags: ['이직', '진로', '면접']
       },
       {
         id: 3,
@@ -54,11 +57,12 @@ export default function ExpertSearchPage() {
         rating: 4.7,
         reviewCount: 156,
         price: '55,000원/시간',
-        image: 'https://via.placeholder.com/100x100/DC2626/FFFFFF?text=박',
+        image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face',
         description: '가족치료 전문가, 가족 간 소통과 관계 개선에 특화되어 있습니다.',
         available: false,
         languages: ['한국어'],
-        certifications: ['가족치료사', '부부상담사']
+        certifications: ['가족치료사', '부부상담사'],
+        tags: ['부부관계', '자녀교육', '소통']
       },
       {
         id: 4,
@@ -69,11 +73,12 @@ export default function ExpertSearchPage() {
         rating: 4.6,
         reviewCount: 203,
         price: '45,000원/시간',
-        image: 'https://via.placeholder.com/100x100/7C3AED/FFFFFF?text=최',
+        image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
         description: '청소년 전문 상담사, 10대들의 고민을 이해하고 공감하는 상담을 제공합니다.',
         available: true,
         languages: ['한국어'],
-        certifications: ['청소년상담사', '학교상담사']
+        certifications: ['청소년상담사', '학교상담사'],
+        tags: ['학교생활', '진로', '대인관계']
       },
       {
         id: 5,
@@ -84,11 +89,12 @@ export default function ExpertSearchPage() {
         rating: 4.5,
         reviewCount: 78,
         price: '40,000원/시간',
-        image: 'https://via.placeholder.com/100x100/F59E0B/FFFFFF?text=정',
+        image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face',
         description: '건강관리 전문가, 개인 맞춤형 운동과 영양 상담을 제공합니다.',
         available: true,
         languages: ['한국어'],
-        certifications: ['건강관리사', '운동처방사']
+        certifications: ['건강관리사', '운동처방사'],
+        tags: ['운동', '영양', '생활습관']
       },
       {
         id: 6,
@@ -99,11 +105,12 @@ export default function ExpertSearchPage() {
         rating: 4.8,
         reviewCount: 134,
         price: '55,000원/시간',
-        image: 'https://via.placeholder.com/100x100/10B981/FFFFFF?text=한',
+        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
         description: '교육 전문가, 효과적인 학습 방법과 진학 준비를 도와드립니다.',
         available: true,
         languages: ['한국어', '영어'],
-        certifications: ['교육상담사', '학습코치']
+        certifications: ['교육상담사', '학습코치'],
+        tags: ['학습법', '진학', '시험준비']
       }
     ];
 
@@ -155,13 +162,13 @@ export default function ExpertSearchPage() {
   }, [experts, selectedCategory, selectedExperience, selectedRating, searchTerm]);
 
   const categories = [
-    { id: 'all', name: '전체' },
-    { id: '심리상담', name: '심리상담' },
-    { id: '커리어상담', name: '커리어상담' },
-    { id: '가족상담', name: '가족상담' },
-    { id: '청소년상담', name: '청소년상담' },
-    { id: '건강상담', name: '건강상담' },
-    { id: '교육상담', name: '교육상담' }
+    { id: 'all', name: '전체', icon: '🌟' },
+    { id: '심리상담', name: '심리상담', icon: '🧠' },
+    { id: '커리어상담', name: '커리어상담', icon: '💼' },
+    { id: '가족상담', name: '가족상담', icon: '👨‍👩‍👧‍👦' },
+    { id: '청소년상담', name: '청소년상담', icon: '🎓' },
+    { id: '건강상담', name: '건강상담', icon: '🏥' },
+    { id: '교육상담', name: '교육상담', icon: '📚' }
   ];
 
   const experienceOptions = [
@@ -203,7 +210,7 @@ export default function ExpertSearchPage() {
           <div className="spinner-border text-primary mb-3" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
-          <p className="text-muted">전문가를 찾고 있습니다...</p>
+          <p className="text-dark">전문가를 찾고 있습니다...</p>
         </div>
       </div>
     );
@@ -212,12 +219,43 @@ export default function ExpertSearchPage() {
   return (
     <div className="min-vh-100 bg-light">
       {/* 헤더 */}
-      <div className="bg-white shadow-sm border-bottom">
+      <div className="bg-white shadow-sm border-bottom position-sticky top-0 z-3">
         <div className="container py-4">
           <div className="row align-items-center">
             <div className="col-lg-8 mb-3 mb-lg-0">
-              <h1 className="h2 fw-bold text-dark mb-2">전문가 검색</h1>
-              <p className="text-muted mb-0">다양한 분야의 전문가를 쉽게 검색하고 원하는 조건에 맞는 상담자를 찾을 수 있습니다</p>
+              <div className="d-flex align-items-center gap-3">
+                <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style={{width: '50px', height: '50px'}}>
+                  <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20" className="text-primary">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h1 className="h2 fw-bold text-dark mb-1">전문가 검색</h1>
+                  <p className="text-muted mb-0">다양한 분야의 전문가를 쉽게 검색하고 원하는 조건에 맞는 상담자를 찾을 수 있습니다</p>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-4 text-lg-end">
+              <div className="btn-group" role="group">
+                <button
+                  type="button"
+                  className={`btn btn-outline-secondary ${viewMode === 'grid' ? 'active' : ''}`}
+                  onClick={() => setViewMode('grid')}
+                >
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  className={`btn btn-outline-secondary ${viewMode === 'list' ? 'active' : ''}`}
+                  onClick={() => setViewMode('list')}
+                >
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -225,18 +263,23 @@ export default function ExpertSearchPage() {
 
       <div className="container py-5">
         {/* 필터 영역 */}
-        <div className="card mb-4">
+        <div className="card border-0 shadow-sm mb-4">
           <div className="card-body p-4">
             <div className="row g-3">
               {/* 검색 */}
               <div className="col-12 col-lg-6">
-                <label className="form-label fw-semibold">검색</label>
+                <label className="form-label fw-semibold">
+                  <svg className="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                  </svg>
+                  검색
+                </label>
                 <input
                   type="text"
                   placeholder="전문가 이름, 전문분야로 검색..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="form-control"
+                  className="form-control form-control-lg"
                 />
               </div>
 
@@ -246,11 +289,11 @@ export default function ExpertSearchPage() {
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="form-select"
+                  className="form-select form-select-lg"
                 >
                   {categories.map((category) => (
                     <option key={category.id} value={category.id}>
-                      {category.name}
+                      {category.icon} {category.name}
                     </option>
                   ))}
                 </select>
@@ -262,7 +305,7 @@ export default function ExpertSearchPage() {
                 <select
                   value={selectedExperience}
                   onChange={(e) => setSelectedExperience(e.target.value)}
-                  className="form-select"
+                  className="form-select form-select-lg"
                 >
                   {experienceOptions.map((option) => (
                     <option key={option.id} value={option.id}>
@@ -278,7 +321,7 @@ export default function ExpertSearchPage() {
                 <select
                   value={selectedRating}
                   onChange={(e) => setSelectedRating(e.target.value)}
-                  className="form-select"
+                  className="form-select form-select-lg"
                 >
                   {ratingOptions.map((option) => (
                     <option key={option.id} value={option.id}>
@@ -291,26 +334,54 @@ export default function ExpertSearchPage() {
           </div>
         </div>
 
+        {/* 결과 카운트 */}
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h3 className="h5 fw-semibold text-dark mb-0">
+            {filteredExperts.length}명의 전문가를 찾았습니다
+          </h3>
+          <div className="text-muted small">
+            실시간 상담 가능한 전문가만 표시
+          </div>
+        </div>
+
         {/* 전문가 목록 */}
-        <div className="row g-4">
+        <div className={`row g-4 ${viewMode === 'list' ? 'flex-column' : ''}`}>
           {filteredExperts.map((expert) => (
-            <div key={expert.id} className="col-12 col-md-6 col-lg-4">
-              <div className="card h-100">
-                {/* 전문가 정보 */}
-                <div className="card-body">
-                  <div className="d-flex align-items-start gap-3">
+            <div key={expert.id} className={viewMode === 'list' ? 'col-12' : 'col-12 col-md-6 col-lg-4'}>
+              <div className={`card border-0 shadow-sm h-100 transition-all hover-shadow ${viewMode === 'list' ? 'flex-row' : ''}`}>
+                {viewMode === 'list' && (
+                  <div className="card-img-top" style={{width: '200px', height: '200px', objectFit: 'cover'}}>
                     <img
                       src={expert.image}
                       alt={expert.name}
-                      className="rounded-circle"
-                      width="64"
-                      height="64"
+                      className="w-100 h-100"
+                      style={{objectFit: 'cover'}}
                     />
+                  </div>
+                )}
+                <div className="card-body p-4">
+                  <div className={viewMode === 'list' ? 'd-flex gap-4' : ''}>
+                    {viewMode !== 'list' && (
+                      <div className="text-center mb-3">
+                        <img
+                          src={expert.image}
+                          alt={expert.name}
+                          className="rounded-circle mb-3"
+                          width="80"
+                          height="80"
+                          style={{objectFit: 'cover'}}
+                        />
+                      </div>
+                    )}
+                    
                     <div className="flex-grow-1">
                       <div className="d-flex align-items-center gap-2 mb-2">
                         <h5 className="card-title mb-0">{expert.name}</h5>
                         {expert.available && (
                           <span className="badge bg-success">상담 가능</span>
+                        )}
+                        {!expert.available && (
+                          <span className="badge bg-secondary">예약만 가능</span>
                         )}
                       </div>
                       <p className="text-muted small mb-1">{expert.category}</p>
@@ -329,7 +400,16 @@ export default function ExpertSearchPage() {
                         </span>
                       </div>
 
-                      <p className="card-text small mb-3">{expert.description}</p>
+                      <p className="card-text small mb-3" style={{lineHeight: '1.4'}}>{expert.description}</p>
+                      
+                      {/* 태그 */}
+                      <div className="d-flex flex-wrap gap-1 mb-3">
+                        {expert.tags.map((tag, index) => (
+                          <span key={index} className="badge bg-light text-dark small">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
                       
                       <div className="d-flex align-items-center justify-content-between small text-muted mb-3">
                         <span>경력 {expert.experience}</span>
@@ -339,7 +419,7 @@ export default function ExpertSearchPage() {
                       {/* 자격증 */}
                       <div className="d-flex flex-wrap gap-1 mb-3">
                         {expert.certifications.map((cert, index) => (
-                          <span key={index} className="badge bg-primary bg-opacity-10 text-primary">
+                          <span key={index} className="badge bg-primary bg-opacity-10 text-primary small">
                             {cert}
                           </span>
                         ))}
@@ -348,7 +428,7 @@ export default function ExpertSearchPage() {
                       {/* 언어 */}
                       <div className="d-flex flex-wrap gap-1">
                         {expert.languages.map((lang, index) => (
-                          <span key={index} className="badge bg-light text-dark">
+                          <span key={index} className="badge bg-light text-dark small">
                             {lang}
                           </span>
                         ))}
@@ -358,28 +438,37 @@ export default function ExpertSearchPage() {
                 </div>
 
                 {/* 액션 버튼들 */}
-                <div className="card-footer bg-light">
+                <div className="card-footer bg-transparent border-0 p-4 pt-0">
                   <div className="d-flex gap-2">
                     {expert.available ? (
                       <>
                         <button
                           onClick={() => handleStartVideoConsultation(expert)}
-                          className="btn btn-primary btn-sm flex-fill"
+                          className="btn btn-primary flex-fill rounded-pill"
                         >
+                          <svg className="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                          </svg>
                           실시간 상담
                         </button>
                         <button
                           onClick={() => handleBookConsultation(expert)}
-                          className="btn btn-outline-secondary btn-sm flex-fill"
+                          className="btn btn-outline-secondary flex-fill rounded-pill"
                         >
+                          <svg className="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                          </svg>
                           예약하기
                         </button>
                       </>
                     ) : (
                       <button
                         onClick={() => handleBookConsultation(expert)}
-                        className="btn btn-secondary btn-sm w-100"
+                        className="btn btn-secondary w-100 rounded-pill"
                       >
+                        <svg className="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                        </svg>
                         예약하기
                       </button>
                     )}
@@ -392,14 +481,33 @@ export default function ExpertSearchPage() {
 
         {filteredExperts.length === 0 && (
           <div className="text-center py-5">
-            <div className="text-muted mb-4">
-              <i className="bi bi-search fs-1"></i>
+            <div className="bg-white rounded-3 p-5 shadow-sm">
+              <div className="text-muted mb-4">
+                <svg width="64" height="64" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <h3 className="h5 fw-semibold text-dark mb-2">조건에 맞는 전문가가 없습니다</h3>
+              <p className="text-muted">필터 조건을 변경해보세요</p>
             </div>
-            <h3 className="h5 fw-semibold text-dark mb-2">조건에 맞는 전문가가 없습니다</h3>
-            <p className="text-muted">필터 조건을 변경해보세요</p>
           </div>
         )}
       </div>
+
+      <style jsx>{`
+        .transition-all {
+          transition: all 0.3s ease;
+        }
+        
+        .hover-shadow:hover {
+          box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+        }
+        
+        @media (max-width: 768px) {
+          .h2 { font-size: 1.5rem; }
+          .form-control-lg, .form-select-lg { font-size: 0.875rem; }
+        }
+      `}</style>
     </div>
   );
 } 

@@ -7,7 +7,9 @@ export default function AIQAPage() {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('general');
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
   const navigate = useNavigate();
 
   const scrollToBottom = () => {
@@ -25,18 +27,19 @@ export default function AIQAPage() {
         id: 1,
         type: 'ai',
         content: '안녕하세요! 저는 ConsultOn AI 어시스턴트입니다. 어떤 도움이 필요하신가요?',
-        timestamp: new Date()
+        timestamp: new Date(),
+        avatar: '🤖'
       }
     ]);
   }, []);
 
   const categories = [
-    { id: 'general', name: '일반 상담', icon: '💬' },
-    { id: 'career', name: '커리어 상담', icon: '💼' },
-    { id: 'mental', name: '심리 상담', icon: '🧠' },
-    { id: 'family', name: '가족 상담', icon: '👨‍👩‍👧‍👦' },
-    { id: 'health', name: '건강 상담', icon: '🏥' },
-    { id: 'education', name: '교육 상담', icon: '📚' }
+    { id: 'general', name: '일반 상담', icon: '💬', color: 'primary' },
+    { id: 'career', name: '커리어 상담', icon: '💼', color: 'success' },
+    { id: 'mental', name: '심리 상담', icon: '🧠', color: 'info' },
+    { id: 'family', name: '가족 상담', icon: '👨‍👩‍👧‍👦', color: 'warning' },
+    { id: 'health', name: '건강 상담', icon: '🏥', color: 'danger' },
+    { id: 'education', name: '교육 상담', icon: '📚', color: 'secondary' }
   ];
 
   const quickQuestions = {
@@ -117,12 +120,14 @@ export default function AIQAPage() {
       id: Date.now(),
       type: 'user',
       content: inputValue,
-      timestamp: new Date()
+      timestamp: new Date(),
+      avatar: '👤'
     };
 
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsLoading(true);
+    setIsTyping(true);
 
     // AI 응답 시뮬레이션
     setTimeout(() => {
@@ -131,14 +136,17 @@ export default function AIQAPage() {
         id: Date.now() + 1,
         type: 'ai',
         content: aiResponse,
-        timestamp: new Date()
+        timestamp: new Date(),
+        avatar: '🤖'
       }]);
       setIsLoading(false);
-    }, 1000);
+      setIsTyping(false);
+    }, 1500);
   };
 
   const handleQuickQuestion = (question) => {
     setInputValue(question);
+    inputRef.current?.focus();
   };
 
   const handleKeyPress = (e) => {
@@ -155,18 +163,28 @@ export default function AIQAPage() {
   return (
     <div className="min-vh-100 bg-light">
       {/* 헤더 */}
-      <div className="bg-white shadow-sm border-bottom">
+      <div className="bg-white shadow-sm border-bottom position-sticky top-0 z-3">
         <div className="container py-4">
           <div className="row align-items-center">
             <div className="col-lg-8 mb-3 mb-lg-0">
-              <h1 className="h2 fw-bold text-dark mb-2">AI Q&A</h1>
-              <p className="text-muted mb-0">AI와 대화하며 상담 준비를 해보세요</p>
+              <div className="d-flex align-items-center gap-3">
+                <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style={{width: '50px', height: '50px'}}>
+                  <span className="fs-4">🤖</span>
+                </div>
+                <div>
+                  <h1 className="h2 fw-bold text-dark mb-1">AI Q&A</h1>
+                  <p className="text-muted mb-0">AI와 대화하며 상담 준비를 해보세요</p>
+                </div>
+              </div>
             </div>
             <div className="col-lg-4 text-lg-end">
               <button
                 onClick={handleStartConsultation}
-                className="btn btn-primary btn-lg"
+                className="btn btn-primary btn-lg rounded-pill px-4"
               >
+                <svg className="me-2" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" />
+                </svg>
                 전문가 상담 시작
               </button>
             </div>
@@ -175,114 +193,178 @@ export default function AIQAPage() {
       </div>
 
       <div className="container py-5">
-        {/* 카테고리 선택 */}
-        <div className="card mb-4">
-          <div className="card-body p-4">
-            <h3 className="h5 fw-semibold text-dark mb-4">상담 카테고리</h3>
-            <div className="row g-3">
-              {categories.map((category) => (
-                <div key={category.id} className="col-6 col-md-4 col-lg-2">
-                  <button
-                    onClick={() => setSelectedCategory(category.id)}
-                    className={`btn w-100 p-3 border ${
-                      selectedCategory === category.id
-                        ? 'btn-primary border-primary'
-                        : 'btn-outline-secondary'
-                    }`}
-                  >
-                    <div className="fs-4 mb-2">{category.icon}</div>
-                    <div className="small fw-medium">{category.name}</div>
-                  </button>
+        <div className="row">
+          {/* 카테고리 선택 */}
+          <div className="col-lg-3 mb-4">
+            <div className="card border-0 shadow-sm h-100">
+              <div className="card-body p-4">
+                <h3 className="h5 fw-semibold text-dark mb-4">
+                  <svg className="me-2" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" clipRule="evenodd" />
+                  </svg>
+                  상담 카테고리
+                </h3>
+                <div className="d-flex flex-column gap-2">
+                  {categories.map((category) => (
+                    <button
+                      key={category.id}
+                      onClick={() => setSelectedCategory(category.id)}
+                      className={`btn text-start p-3 rounded-3 transition-all ${
+                        selectedCategory === category.id
+                          ? `btn-${category.color} border-0 shadow-sm`
+                          : 'btn-outline-secondary border-0'
+                      }`}
+                      style={{
+                        transition: 'all 0.3s ease',
+                        transform: selectedCategory === category.id ? 'translateX(5px)' : 'translateX(0)'
+                      }}
+                    >
+                      <div className="d-flex align-items-center gap-3">
+                        <span className="fs-4">{category.icon}</span>
+                        <span className="fw-medium">{category.name}</span>
+                      </div>
+                    </button>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* 채팅 영역 */}
-        <div className="card h-100" style={{ minHeight: '400px' }}>
-          <div className="card-body d-flex flex-column p-0">
-            {/* 메시지 영역 */}
-            <div className="flex-grow-1 overflow-auto p-4" style={{ maxHeight: '400px' }}>
-              <div className="d-flex flex-column gap-3">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`d-flex ${message.type === 'user' ? 'justify-content-end' : 'justify-content-start'}`}
-                  >
-                    <div
-                      className={`rounded-3 px-3 py-2 ${
-                        message.type === 'user'
-                          ? 'bg-primary text-white'
-                          : 'bg-light text-dark'
-                      }`}
-                      style={{ maxWidth: '70%' }}
-                    >
-                      <p className="mb-1">{message.content}</p>
-                      <small className="opacity-75">
-                        {message.timestamp.toLocaleTimeString()}
-                      </small>
+          {/* 채팅 영역 */}
+          <div className="col-lg-9">
+            <div className="card border-0 shadow-sm h-100" style={{ minHeight: '600px' }}>
+              <div className="card-body d-flex flex-column p-0">
+                {/* 메시지 영역 */}
+                <div className="flex-grow-1 overflow-auto p-4" style={{ maxHeight: '500px' }}>
+                  <div className="d-flex flex-column gap-4">
+                    {messages.map((message) => (
+                      <div
+                        key={message.id}
+                        className={`d-flex ${message.type === 'user' ? 'justify-content-end' : 'justify-content-start'}`}
+                      >
+                        <div className="d-flex gap-3" style={{ maxWidth: '80%' }}>
+                          {message.type === 'ai' && (
+                            <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style={{width: '40px', height: '40px', flexShrink: 0}}>
+                              <span className="fs-5">{message.avatar}</span>
+                            </div>
+                          )}
+                          <div
+                            className={`rounded-3 px-4 py-3 ${
+                              message.type === 'user'
+                                ? 'bg-primary text-white'
+                                : 'bg-light text-dark'
+                            }`}
+                            style={{ maxWidth: '100%' }}
+                          >
+                            <p className="mb-2" style={{lineHeight: '1.5'}}>{message.content}</p>
+                            <small className={`${message.type === 'user' ? 'text-white' : 'text-muted'} opacity-75`}>
+                              {message.timestamp.toLocaleTimeString()}
+                            </small>
+                          </div>
+                          {message.type === 'user' && (
+                            <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style={{width: '40px', height: '40px', flexShrink: 0}}>
+                              <span className="fs-5">{message.avatar}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                    
+                    {isLoading && (
+                      <div className="d-flex justify-content-start">
+                        <div className="d-flex gap-3">
+                          <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style={{width: '40px', height: '40px'}}>
+                            <span className="fs-5">🤖</span>
+                          </div>
+                          <div className="bg-light text-dark rounded-3 px-4 py-3">
+                            <div className="d-flex align-items-center gap-2">
+                              <div className="spinner-border spinner-border-sm text-primary" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                              </div>
+                              <span className="small">AI가 답변을 준비하고 있습니다...</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <div ref={messagesEndRef} />
+                  </div>
+                </div>
+
+                {/* 입력 영역 */}
+                <div className="border-top p-4">
+                  <div className="d-flex gap-3">
+                    <div className="flex-grow-1">
+                      <textarea
+                        ref={inputRef}
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        placeholder="질문을 입력하세요..."
+                        className="form-control border-0 bg-light"
+                        rows="2"
+                        style={{resize: 'none'}}
+                      />
                     </div>
+                    <button
+                      onClick={handleSendMessage}
+                      disabled={!inputValue.trim() || isLoading}
+                      className="btn btn-primary rounded-circle d-flex align-items-center justify-content-center"
+                      style={{width: '50px', height: '50px'}}
+                    >
+                      <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 빠른 질문 */}
+            <div className="mt-4">
+              <h3 className="h5 fw-semibold text-dark mb-4">
+                <svg className="me-2" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                </svg>
+                자주 묻는 질문
+              </h3>
+              <div className="row g-3">
+                {quickQuestions[selectedCategory]?.map((question, index) => (
+                  <div key={index} className="col-12 col-md-6 col-lg-4">
+                    <button
+                      onClick={() => handleQuickQuestion(question)}
+                      className="btn btn-outline-secondary w-100 text-start p-3 rounded-3 transition-all hover-shadow"
+                      style={{
+                        transition: 'all 0.3s ease',
+                        border: '1px solid #e9ecef'
+                      }}
+                    >
+                      <p className="mb-0 small">{question}</p>
+                    </button>
                   </div>
                 ))}
-                
-                {isLoading && (
-                  <div className="d-flex justify-content-start">
-                    <div className="bg-light text-dark rounded-3 px-3 py-2" style={{ maxWidth: '70%' }}>
-                      <div className="d-flex align-items-center gap-2">
-                        <div className="spinner-border spinner-border-sm" role="status">
-                          <span className="visually-hidden">Loading...</span>
-                        </div>
-                        <span className="small">AI가 답변을 준비하고 있습니다...</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                
-                <div ref={messagesEndRef} />
               </div>
             </div>
-
-            {/* 입력 영역 */}
-            <div className="border-top p-3">
-              <div className="d-flex gap-2">
-                <textarea
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="질문을 입력하세요..."
-                  className="form-control"
-                  rows="2"
-                />
-                <button
-                  onClick={handleSendMessage}
-                  disabled={!inputValue.trim() || isLoading}
-                  className="btn btn-primary"
-                >
-                  전송
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 빠른 질문 */}
-        <div className="mt-4">
-          <h3 className="h5 fw-semibold text-dark mb-4">자주 묻는 질문</h3>
-          <div className="row g-3">
-            {quickQuestions[selectedCategory]?.map((question, index) => (
-              <div key={index} className="col-12 col-md-6 col-lg-4">
-                <button
-                  onClick={() => handleQuickQuestion(question)}
-                  className="btn btn-outline-secondary w-100 text-start p-3"
-                >
-                  <p className="mb-0 small">{question}</p>
-                </button>
-              </div>
-            ))}
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .transition-all {
+          transition: all 0.3s ease;
+        }
+        
+        .hover-shadow:hover {
+          box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+        }
+        
+        @media (max-width: 768px) {
+          .h2 { font-size: 1.5rem; }
+          .btn-lg { font-size: 0.875rem; padding: 0.5rem 1rem; }
+        }
+      `}</style>
     </div>
   );
 } 

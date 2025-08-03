@@ -42,7 +42,7 @@ export default function ConsultationChat() {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container p-4">
       <h2 className="h3 mb-4">AI 사전 Q&A</h2>
       <ChatHistory history={history} />
       {loading && (

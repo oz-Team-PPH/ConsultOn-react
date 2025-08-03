@@ -51,7 +51,7 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="container-fluid p-4">
+      <div className="container p-4">
         <div className="text-center">
           <div className="spinner-border" role="status">
             <span className="visually-hidden">로딩 중...</span>
@@ -63,7 +63,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="container-fluid p-4">
+    <div className="container p-4">
       <div className="row">
         <div className="col-12">
           <h1 className="h2 mb-4">안녕하세요, {userData?.name}님!</h1>

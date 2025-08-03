@@ -148,7 +148,7 @@ const PopularExperts = () => {
   return (
     <section
       id="popular-experts"
-      className="py-5 w-100"
+      className="py-5"
       style={{
         backgroundColor: "#ffffff",
         marginBottom: "4rem"

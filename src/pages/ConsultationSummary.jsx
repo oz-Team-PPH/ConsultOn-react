@@ -44,7 +44,7 @@ export default function ConsultationSummary() {
 
   if (loading)
     return (
-      <div className="container mx-auto p-4">
+      <div className="container p-4">
         <div className="text-center">
           <div className="spinner-border" role="status">
             <span className="visually-hidden">로딩 중...</span>
@@ -56,7 +56,7 @@ export default function ConsultationSummary() {
 
   if (error)
     return (
-      <div className="container mx-auto p-4">
+      <div className="container p-4">
         <div className="alert alert-danger" role="alert">
           {error}
         </div>
@@ -64,7 +64,7 @@ export default function ConsultationSummary() {
     );
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container p-4">
       <h2 className="h3 mb-4">상담 요약 & To-Do</h2>
       <SummaryCard data={summary.keyPoints} />
       <ToDoList items={summary.actions} />

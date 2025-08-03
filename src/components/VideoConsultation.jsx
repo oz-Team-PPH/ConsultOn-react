@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import VideoGrid from './VideoGrid';
 import VideoControls from './VideoControls';
 import StatusIndicator from './StatusIndicator';
+import ChatBubble from './ChatBubble';
+import MediaPermissionRequest from './MediaPermissionRequest';
 
 export default function VideoConsultation({ isExpert = false }) {
   const [localStream, setLocalStream] = useState(null);
@@ -18,6 +20,14 @@ export default function VideoConsultation({ isExpert = false }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [retryCount, setRetryCount] = useState(0);
+  const [permissionsGranted, setPermissionsGranted] = useState(true);
+  
+  // 채팅 관련 상태
+  const [chatMessages, setChatMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
+  const [showChat, setShowChat] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
 
   // 미디어 스트림 초기화 (개선된 에러 처리)
   const initializeMediaStream = useCallback(async () => {
@@ -38,8 +48,8 @@ export default function VideoConsultation({ isExpert = false }) {
       const stream = await navigator.mediaDevices.getUserMedia({ 
         audio: true, 
         video: {
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
           facingMode: 'user'
         }
       });
@@ -100,16 +110,18 @@ export default function VideoConsultation({ isExpert = false }) {
     }
   }, []);
 
-  // useEffect로 미디어 스트림 초기화 및 정리
+  // 권한이 허용된 후에만 미디어 스트림 초기화
   useEffect(() => {
-    initializeMediaStream();
+    if (permissionsGranted) {
+      initializeMediaStream();
+    }
 
     return () => {
       if (localStream) {
         cleanupMediaStream(localStream);
       }
     };
-  }, [initializeMediaStream, cleanupMediaStream]);
+  }, [permissionsGranted, initializeMediaStream, cleanupMediaStream]);
 
   // 타이머 (메모이제이션 포함)
   useEffect(() => {
@@ -118,6 +130,16 @@ export default function VideoConsultation({ isExpert = false }) {
       return () => clearTimeout(timer);
     }
   }, [timeLeft, isPaused]);
+
+  // 녹화 타이머
+  useEffect(() => {
+    if (isRecording) {
+      const timer = setInterval(() => {
+        setRecordingTime(prev => prev + 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [isRecording]);
 
   // 마이크 토글 (개선된 로직)
   const handleToggleMute = useCallback(() => {
@@ -207,12 +229,54 @@ export default function VideoConsultation({ isExpert = false }) {
     console.log(isPaused ? "상담 재개" : "상담 일시정지");
   }, [isPaused]);
 
+  // 권한 허용 콜백
+  const handlePermissionGranted = useCallback(() => {
+    setPermissionsGranted(true);
+    setIsLoading(false);
+  }, []);
+
+  // 권한 거부 콜백
+  const handlePermissionDenied = useCallback(() => {
+    setPermissionsGranted(false);
+    setIsLoading(false);
+  }, []);
+
   // 재시도 (개선된 로직)
   const handleRetry = useCallback(() => {
     setRetryCount(prev => prev + 1);
     setError(null);
-    initializeMediaStream();
-  }, [initializeMediaStream]);
+    if (permissionsGranted) {
+      initializeMediaStream();
+    }
+  }, [initializeMediaStream, permissionsGranted]);
+
+  // 채팅 메시지 전송
+  const handleSendMessage = useCallback(() => {
+    if (newMessage.trim()) {
+      const message = {
+        id: Date.now(),
+        text: newMessage,
+        sender: isExpert ? '전문가' : '고객',
+        timestamp: new Date().toLocaleTimeString(),
+        isExpert: isExpert
+      };
+      setChatMessages(prev => [...prev, message]);
+      setNewMessage('');
+    }
+  }, [newMessage, isExpert]);
+
+  // 채팅 토글
+  const handleToggleChat = useCallback(() => {
+    setShowChat(!showChat);
+  }, [showChat]);
+
+  // 녹화 시작/중지
+  const handleToggleRecording = useCallback(() => {
+    setIsRecording(!isRecording);
+    if (!isRecording) {
+      setRecordingTime(0);
+    }
+  }, [isRecording]);
 
   // 에러 메시지 (메모이제이션)
   const errorMessage = useMemo(() => {
@@ -241,10 +305,22 @@ export default function VideoConsultation({ isExpert = false }) {
     );
   }, [error]);
 
+  // 권한이 허용되지 않은 경우 권한 요청 화면 표시
+  if (!permissionsGranted) {
+    return (
+      <div className="relative w-full h-screen bg-gray-900 rounded-lg overflow-hidden">
+        <MediaPermissionRequest
+          onPermissionGranted={handlePermissionGranted}
+          onPermissionDenied={handlePermissionDenied}
+        />
+      </div>
+    );
+  }
+
   // 로딩 상태 (개선된 UI)
   if (isLoading) {
     return (
-      <div className="relative w-full h-96 bg-gray-900 rounded-lg overflow-hidden flex items-center justify-center">
+      <div className="relative w-full h-screen bg-gray-900 rounded-lg overflow-hidden flex items-center justify-center">
         <div className="text-white text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
           <div className="text-lg mb-2">미디어 스트림을 초기화하는 중...</div>
@@ -257,7 +333,7 @@ export default function VideoConsultation({ isExpert = false }) {
   // 에러 상태 (개선된 UI)
   if (error && retryCount >= 3) {
     return (
-      <div className="relative w-full h-96 bg-gray-900 rounded-lg overflow-hidden flex items-center justify-center">
+      <div className="relative w-full h-screen bg-gray-900 rounded-lg overflow-hidden flex items-center justify-center">
         <div className="text-white text-center max-w-md">
           <div className="text-red-400 mb-4">
             <svg className="w-16 h-16 mx-auto" fill="currentColor" viewBox="0 0 20 20">
@@ -288,8 +364,29 @@ export default function VideoConsultation({ isExpert = false }) {
   }
 
   return (
-    <div className="relative w-full h-96 bg-gray-900 rounded-lg overflow-hidden">
-      <VideoGrid localStream={localStream} remoteStream={remoteStream} />
+    <div className="relative w-full h-screen bg-gray-900 rounded-lg overflow-hidden">
+      {/* 전문가/고객 표시 */}
+      <div className="absolute top-6 left-6 z-10">
+        <div className={`px-4 py-2 rounded-full text-sm font-medium ${
+          isExpert 
+            ? 'bg-blue-600 text-white' 
+            : 'bg-green-600 text-white'
+        }`}>
+          {isExpert ? '전문가 모드' : '고객 모드'}
+        </div>
+      </div>
+
+      {/* 녹화 상태 표시 */}
+      {isRecording && (
+        <div className="absolute top-6 left-40 z-10">
+          <div className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-medium flex items-center">
+            <div className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></div>
+            녹화 중 {Math.floor(recordingTime / 60)}:{(recordingTime % 60).toString().padStart(2, '0')}
+          </div>
+        </div>
+      )}
+
+      <VideoGrid localStream={localStream} remoteStream={remoteStream} isExpert={isExpert} />
       
       {/* 상태 표시 (좌상단) */}
       <StatusIndicator 
@@ -309,14 +406,70 @@ export default function VideoConsultation({ isExpert = false }) {
         onEnd={handleEnd}
         isExpert={isExpert}
         onPause={handlePause}
+        onToggleChat={handleToggleChat}
+        onToggleRecording={handleToggleRecording}
+        isRecording={isRecording}
       />
+      
+      {/* 채팅 패널 */}
+      {showChat && (
+        <div className="absolute top-0 right-0 w-96 h-full bg-white shadow-lg border-l">
+          <div className="flex flex-col h-full">
+            {/* 채팅 헤더 */}
+            <div className="bg-gray-50 px-6 py-4 border-b">
+              <div className="flex items-center justify-between">
+                <h3 className="font-medium text-gray-900">채팅</h3>
+                <button 
+                  onClick={handleToggleChat}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* 채팅 메시지 */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              {chatMessages.map((message) => (
+                <ChatBubble 
+                  key={message.id}
+                  message={message}
+                  isOwn={message.isExpert === isExpert}
+                />
+              ))}
+            </div>
+
+            {/* 메시지 입력 */}
+            <div className="border-t p-6">
+              <div className="flex space-x-3">
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  placeholder="메시지를 입력하세요..."
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  onClick={handleSendMessage}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                >
+                  전송
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* 일시정지 오버레이 */}
       {isPaused && (
         <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center">
           <div className="text-white text-center">
-            <div className="text-2xl font-bold mb-2">상담 일시정지</div>
-            <div className="text-sm">전문가가 상담을 일시정지했습니다.</div>
+            <div className="text-3xl font-bold mb-4">상담 일시정지</div>
+            <div className="text-lg">전문가가 상담을 일시정지했습니다.</div>
           </div>
         </div>
       )}

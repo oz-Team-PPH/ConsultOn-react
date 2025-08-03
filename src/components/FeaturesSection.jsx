@@ -228,7 +228,7 @@ const FeaturesSection = () => {
 
   return (
     <section
-      className="features-section w-100"
+      className="features-section"
       style={{
         backgroundColor: "#f8f9fa",
         marginBottom: "4rem"
